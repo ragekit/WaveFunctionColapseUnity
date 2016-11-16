@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
-
+using System;
 
 [ExecuteInEditMode]
-[System.Serializable]
+[Serializable]
 public class Grid : MonoBehaviour
 {
 
@@ -21,16 +21,16 @@ public class Grid : MonoBehaviour
 	public GameObject module;
 
 	[SerializeField]
-	public Module[] content;
+	public Module2DArray content;
 
 	private Vector3 moduleSize;
 
-	private Dictionary<float,GameObject> angleToSelection;
+	//private Dictionary<float,GameObject> angleToSelection;
 
 	void Awake ()
 	{
 		i = this;
-		Debug.Log ("Awake");
+		//	Debug.Log ("Awake");
 	}
 
 	void Start ()
@@ -42,38 +42,30 @@ public class Grid : MonoBehaviour
 	{
 
 		Grid.root = gameObject;
-		if (content != null && content.Length > 0) {
+		if (content != null) {
 			Clear ();
 		}
-		
-		content = new Module[(int)gridSize.x * (int)gridSize.y];
+		content = new Module2DArray ((int)gridSize.x * (int)gridSize.y, (int)gridSize.x);
 		Debug.Log (gridSize);
 		Grid.root.name = "GridRoot";
-		//clear ();
+
 
 		moduleSize = new Vector3 (1, 1, 1);
 	
-		for (int i = 0; i < gridSize.x * gridSize.y; i++) {
+		for (int x = 0; x < gridSize.x; x++) {
+			for (int y = 0; y < gridSize.y; y++) {
+				GameObject go = Instantiate (module, 
+					                new Vector3 (transform.position.x + (x + 0.5f - gridSize.x / 2f) * moduleSize.x, 0, transform.position.z + (y + 0.5f - gridSize.y / 2f) * moduleSize.y), 
+					                Quaternion.identity) as GameObject;
 
-			int x, y;
-			x = (int)(i % gridSize.x);
-			y = Mathf.FloorToInt (i / gridSize.x);
-
-			GameObject go = Instantiate (module, 
-				                new Vector3 (transform.position.x + (x + 0.5f - gridSize.x / 2f) * moduleSize.x, 0, transform.position.z + (y + 0.5f - gridSize.y / 2f) * moduleSize.y), 
-				                Quaternion.identity) as GameObject;
-			
-			go.name = "module" + (x) + " " + (y);
-			go.GetComponent<Module> ().gridPosition.x = x;
-			go.GetComponent<Module> ().gridPosition.y = y;
-			content [i] = go.GetComponent<Module> ();
-			go.transform.parent = Grid.root.transform;
-			go.layer = 10;
-
+				go.name = "module" + (x) + " " + (y);
+				go.GetComponent<Module> ().gridPosition.x = x;
+				go.GetComponent<Module> ().gridPosition.y = y;
+				content.set (x, y, go.GetComponent<Module> ());
+				go.transform.parent = Grid.root.transform;
+				go.layer = 10;
+			}
 		}
-
-		//content [0] = new GameObject[(int)gridSize.y + 2];
-		//content [(int)gridSize.y + 1] = new GameObject[(int)gridSize.y + 2];
 	}
 
 	public void Clear ()

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
+[Serializable]
 public class Module : MonoBehaviour
 {
 
@@ -9,13 +11,6 @@ public class Module : MonoBehaviour
 	public GameObject content;
 
 	public bool toggle = true;
-
-	void Start ()
-	{
-	
-	}
-
-
 
 	void OnDrawGizmos ()
 	{
