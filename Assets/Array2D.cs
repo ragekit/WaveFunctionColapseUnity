@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public class Fake2DArray<T>
+public class Array2D<T>
 {
 	[SerializeField]
 	private T[] content;
@@ -10,7 +10,7 @@ public class Fake2DArray<T>
 	public int width;
 	public int Length;
 
-	public Fake2DArray (int size, int width, int height = 0)
+	public Array2D (int size, int width, int height = -1)
 	{
 		Length = size;
 		content = new T[size];
@@ -41,7 +41,42 @@ public class Fake2DArray<T>
 }
 
 [Serializable]
-public class Module2DArray : Fake2DArray<Module>
+public class Array3D<T>
+{
+	[SerializeField]
+	private T[] content;
+
+	public int width;
+	public int height;
+	public int Length;
+
+	public Array3D (int size, int width, int height, int depth = -1)
+	{
+		Length = size;
+		this.width = width;
+		this.height = height;
+
+		content = new T[size];
+	}
+
+	public T get (int x, int y, int z)
+	{
+		return content [x + width * (y + height * z)];
+	}
+
+	public void set (int x, int y, int z, T value)
+	{
+		content [x + width * (y + height * z)] = value;
+	}
+
+	public T this [int i] {
+		get { return content [i]; }
+		set { content [i] = value; }
+	}
+}
+
+[Serializable]
+public class Module2DArray : Array2D<Module>
 {
 	public Module2DArray (int size, int width, int height = 0) : base (size, width, height)
 	{

@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class Pattern : Fake2DArray<int>
+public class Pattern : Array2D<int>
 {
 	public int index;
 	int sampleX;
@@ -8,9 +8,11 @@ public class Pattern : Fake2DArray<int>
 
 	public int weight;
 
+	public Array2D<int[]> neighbors;
+
 	public Pattern (int n) : base (n * n, n)
 	{
-		
+		neighbors = new Array2D<int[]> ((2 * n - 1) * (2 * n - 1), (2 * n - 1));
 	}
 
 	void setIndex ()
